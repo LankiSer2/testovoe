@@ -29,7 +29,7 @@ RUN mkdir -p database storage/framework/{cache,sessions,views} storage/logs boot
     && chmod -R 777 storage bootstrap/cache database
 
 COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
 
 ENV APP_ENV=production
 ENV APP_DEBUG=false
