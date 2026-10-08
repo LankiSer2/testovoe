@@ -1,0 +1,14 @@
+**/node_modules
+**/vendor
+**/.git
+**/dist
+backend/.env
+frontend/.env
+backend/database/*.sqlite
+backend/storage/logs/*
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+**/.phpunit.result.cache
+**/Thumbs.db
+**/.DS_Store
