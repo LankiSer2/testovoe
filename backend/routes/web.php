@@ -10,4 +10,4 @@ Route::get('/{any?}', function () {
     }
 
     return response(file_get_contents($spa), 200)->header('Content-Type', 'text/html');
-})->where('any', '^(?!api).*$');
+})->where('any', '^(?!api|docs).*$');
