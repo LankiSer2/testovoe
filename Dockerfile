@@ -28,8 +28,22 @@ RUN mkdir -p database storage/framework/{cache,sessions,views} storage/logs boot
     && touch database/database.sqlite \
     && chmod -R 777 storage bootstrap/cache database
 
-COPY docker/entrypoint.sh /entrypoint.sh
-RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
+RUN printf '%s\n' \
+  '#!/bin/sh' \
+  'set -e' \
+  'if [ -z "$APP_KEY" ]; then' \
+  '  echo "APP_KEY is not set"' \
+  '  exit 1' \
+  'fi' \
+  'PORT="${PORT:-10000}"' \
+  'APP_URL="${APP_URL:-http://localhost:${PORT}}"' \
+  'export APP_URL' \
+  'php artisan config:clear' \
+  'php artisan migrate --force' \
+  'php artisan l5-swagger:generate || true' \
+  'exec php artisan serve --host=0.0.0.0 --port="$PORT"' \
+  > /entrypoint.sh \
+  && chmod +x /entrypoint.sh
 
 ENV APP_ENV=production
 ENV APP_DEBUG=false
@@ -40,4 +54,4 @@ ENV CACHE_STORE=file
 ENV QUEUE_CONNECTION=sync
 
 EXPOSE 10000
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
